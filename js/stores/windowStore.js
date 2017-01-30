@@ -396,6 +396,14 @@ const doAction = (action) => {
         updateTabPageIndex(action.frameProps)
       }
       break
+    case windowConstants.WINDOW_SET_TAB_BREAKPOINT:
+      windowState = windowState.setIn(['frames', frameStateUtil.getFramePropsIndex(windowState.get('frames'), action.frameProps), 'breakpoint'], action.breakpoint)
+      windowState = windowState.setIn(['tabs', frameStateUtil.getFramePropsIndex(windowState.get('frames'), action.frameProps), 'breakpoint'], action.breakpoint)
+      break
+    case windowConstants.WINDOW_SET_TAB_HOVER_STATE:
+      windowState = windowState.setIn(['frames', frameStateUtil.getFramePropsIndex(windowState.get('frames'), action.frameProps), 'hoverState'], action.hoverState)
+      windowState = windowState.setIn(['tabs', frameStateUtil.getFramePropsIndex(windowState.get('frames'), action.frameProps), 'hoverState'], action.hoverState)
+      break
     case windowConstants.WINDOW_SET_IS_BEING_DRAGGED_OVER_DETAIL:
       if (!action.dragOverKey) {
         windowState = windowState.deleteIn(['ui', 'dragging'])

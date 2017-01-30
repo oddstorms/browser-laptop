@@ -310,7 +310,9 @@ WindowStore
     icon: string, // favicon url
     location: string, // The currently navigated location
     loading: boolean,
-    frameKey: number
+    frameKey: number,
+    breakpoint: string, // breakpoint name for current tab size, specified in app/renderer/components/styles/tab.js
+    hoverState: boolean // current tab hover state
   }],
   frames: [{
     audioMuted: boolean, // frame is muted
