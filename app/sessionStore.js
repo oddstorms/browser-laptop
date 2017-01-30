@@ -20,7 +20,7 @@ const locale = require('./locale')
 const UpdateStatus = require('../js/constants/updateStatus')
 const settings = require('../js/constants/settings')
 const downloadStates = require('../js/constants/downloadStates')
-const {tabFromFrame} = require('../js/state/frameStateUtil')
+const {getPartitionFromNumber, tabFromFrame} = require('../js/state/frameStateUtil')
 const siteUtil = require('../js/state/siteUtil')
 const { topSites, pinnedTopSites } = require('../js/data/newTabData')
 const sessionStorageVersion = 1
@@ -414,6 +414,12 @@ module.exports.loadAppState = () => {
 
     try {
       data = JSON.parse(data)
+      // Make sure needed partitions are initialized
+      if (data.perWindowState) {
+        data.perWindowState.forEach((wndPayload) => {
+          wndPayload.frames.forEach((frame) => frame.partitionNumber && filtering.initPartition(getPartitionFromNumber(frame.partitionNumber, false)))
+        })
+      }
       // autofill data migration
       if (data.autofill) {
         if (Array.isArray(data.autofill.addresses)) {

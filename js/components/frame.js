@@ -315,9 +315,8 @@ class Frame extends ImmutableComponent {
           guestInstanceId = null
         }
       } else {
-        let partition = FrameStateUtil.getPartition(this.frame)
-        ipc.sendSync(messages.INITIALIZE_PARTITION, partition)
-        this.webview.setAttribute('partition', partition)
+        // The partition is guaranteed to be initialized by now by the browser process
+        this.webview.setAttribute('partition', FrameStateUtil.getPartition(this.frame))
       }
 
       this.addEventListeners()

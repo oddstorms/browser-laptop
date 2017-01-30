@@ -72,7 +72,7 @@ const {isIntermediateAboutPage, getBaseUrl, isNavigatableAboutPage} = require('.
 const siteSettings = require('../state/siteSettings')
 const urlParse = require('../../app/common/urlParse')
 const debounce = require('../lib/debounce')
-const {currentWindow, isMaximized, isFocused, isFullScreen} = require('../../app/renderer/currentWindow')
+const {currentWindow, currentWindowId, isMaximized, isFocused, isFullScreen} = require('../../app/renderer/currentWindow')
 const emptyMap = new Immutable.Map()
 const emptyList = new Immutable.List()
 
@@ -240,10 +240,10 @@ class Main extends ImmutableComponent {
       if (!this.braveShieldsDisabled) {
         this.onBraveMenu()
       } else {
-        windowActions.newFrame({
-          location: 'about:preferences#shields',
-          singleFrame: true
-        }, true)
+        appActions.maybeCreateTabRequested({
+          url: 'about:preferences#shields',
+          windowId: currentWindowId
+        })
       }
     })
     ipc.on(messages.ENABLE_SWIPE_GESTURE, (e) => {

@@ -53,6 +53,27 @@ A new tab has been created
 
 
 
+### tabCreateRequested(createProperties) 
+
+A request for a new tab has been made with the specified createProperties
+
+**Parameters**
+
+**createProperties**: `Object`, A request for a new tab has been made with the specified createProperties
+
+
+
+### maybeCreateTabRequested(createProperties) 
+
+A request for a "maybe" new tab has been made with the specified createProperties
+If a tab is already opened it will instead set it as active.
+
+**Parameters**
+
+**createProperties**: `Object`, these are only used if a new tab is being created
+
+
+
 ### tabUpdated(tabValue) 
 
 A tab has been updated

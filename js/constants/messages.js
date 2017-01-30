@@ -88,7 +88,6 @@ const messages = {
   DECRYPTED_PASSWORD: _, /** @arg {number} decrypted pw, @arg {number} id */
   // Init
   INITIALIZE_WINDOW: _,
-  INITIALIZE_PARTITION: _, /** @arg {string} name of partition */
   // Session restore
   REQUEST_WINDOW_STATE: _,
   RESPONSE_WINDOW_STATE: _,

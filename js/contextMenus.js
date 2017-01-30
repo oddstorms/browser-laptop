@@ -29,6 +29,7 @@ const locale = require('../js/l10n')
 const {getSetting} = require('./settings')
 const settings = require('./constants/settings')
 const textUtils = require('./lib/text')
+const {getPartitionFromNumber} = require('./state/frameStateUtil')
 const {isIntermediateAboutPage, isUrl, aboutUrls} = require('./lib/appUrlUtil')
 const {getBase64FromImageUrl} = require('./lib/imageUtil')
 const urlParse = require('../app/common/urlParse')
@@ -959,7 +960,11 @@ function mainTemplateInit (nodeProps, frame, tab) {
         click: (item, focusedWindow) => {
           if (focusedWindow && nodeProps.srcURL) {
             // TODO: open this in the next tab instead of last tab
-            focusedWindow.webContents.send(messages.SHORTCUT_NEW_FRAME, nodeProps.srcURL, { isPrivate: frame.get('isPrivate'), partitionNumber: frame.get('partitionNumber') })
+            appActions.tabCreateRequested({
+              url: nodeProps.srcURL,
+              windowId: focusedWindow.id,
+              partition: getPartitionFromNumber(frame.get('partitionNumber'), frame.get('isPrivate'))
+            })
           }
         }
       },

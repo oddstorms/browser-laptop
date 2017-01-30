@@ -39,6 +39,7 @@ const beforeSendHeadersFilteringFns = []
 const beforeRequestFilteringFns = []
 const beforeRedirectFilteringFns = []
 const headersReceivedFilteringFns = []
+let partitionsToInitialize = []
 let initializedPartitions = {}
 
 const transparent1pxGif = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
@@ -541,7 +542,15 @@ function initSession (ses, partition) {
   ses.userPrefs.setDefaultZoomLevel(getSetting(settings.DEFAULT_ZOOM_LEVEL) || config.zoom.defaultValue)
 }
 
-function initForPartition (partition) {
+module.exports.initPartition = (partition) => {
+  // Partitions can only be initialized once the app is ready
+  if (!app.isReady()) {
+    partitionsToInitialize.push(partition)
+    return
+  }
+  if (initializedPartitions[partition]) {
+    return
+  }
   let fns = [initSession,
     userPrefs.init,
     hostContentSettings.init,
@@ -605,16 +614,7 @@ module.exports.init = (state, action, store) => {
 
   setImmediate(() => {
     ['default'].forEach((partition) => {
-      initForPartition(partition)
-    })
-    ipcMain.on(messages.INITIALIZE_PARTITION, (e, partition) => {
-      if (initializedPartitions[partition]) {
-        e.returnValue = true
-        return e.returnValue
-      }
-      initForPartition(partition)
-      e.returnValue = true
-      return e.returnValue
+      module.exports.initPartition(partition)
     })
     ipcMain.on(messages.NOTIFICATION_RESPONSE, (e, message, buttonIndex, persist) => {
       if (permissionCallbacks[message]) {
@@ -622,6 +622,9 @@ module.exports.init = (state, action, store) => {
       }
     })
   })
+
+  partitionsToInitialize.forEach(module.exports.initPartition)
+  partitionsToInitialize = []
 
   return state
 }
